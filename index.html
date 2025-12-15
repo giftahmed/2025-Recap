@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 Reality Review | Gift Ahmed</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        brand: 'var(--color-brand)',
+                        bg: 'var(--color-bg)',
+                        surface: 'var(--color-surface)',
+                        text: 'var(--color-text)',
+                        muted: 'var(--color-muted)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            /* Dark Mode Variables (Default) */
+            --color-brand: #00f3ff;
+            --color-bg: #050505;
+            --color-surface: rgba(20, 20, 20, 0.6);
+            --color-text: #ffffff;
+            --color-muted: #9ca3af;
+            --bg-gradient: linear-gradient(to bottom, #050505, #0a0a0a);
+        }
+
+        html.light {
+            /* Light Mode Variables */
+            --color-brand: #2563eb; /* Royal Blue */
+            --color-bg: #f3f4f6;
+            --color-surface: rgba(255, 255, 255, 0.7);
+            --color-text: #111827;
+            --color-muted: #4b5563;
+            --bg-gradient: linear-gradient(to bottom, #f3f4f6, #e5e7eb);
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--color-text);
+            transition: background 0.5s ease, color 0.5s ease;
+            overflow-x: hidden;
+        }
+        
+        #canvas-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100vh;
+            z-index: -1;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .glass-card {
+            background: var(--color-surface);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(128, 128, 128, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: var(--color-brand);
+            transform: translateY(-5px);
+        }
+
+        /* Toggle Button */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            background: var(--color-surface);
+            border: 1px solid var(--color-muted);
+            color: var(--color-text);
+            padding: 10px;
+            border-radius: 50%;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            border-color: var(--color-brand);
+        }
+
+        .section-padding { padding-top: 10vh; padding-bottom: 10vh; }
+        
+        /* Chart Containers */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- 3D Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle Theme">
+        <svg id="moon-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+        <svg id="sun-icon" class="w-6 h-6 block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+    </button>
+
+    <!-- Progress Bar -->
+    <div class="fixed top-0 left-0 h-1 bg-brand z-50 w-0 transition-colors duration-500" id="progress-bar"></div>
+
+    <main class="relative z-10">
+
+        <!-- SLIDE 1: HERO -->
+        <section class="min-h-screen flex flex-col justify-center items-center text-center px-4 relative section-padding">
+            <div class="mb-4 font-mono text-brand text-sm tracking-[0.3em] uppercase opacity-0 animate-in">Data | Teaching | Health | Growth</div>
+            <h1 class="text-6xl md:text-9xl font-black mb-6 tracking-tighter leading-none opacity-0 animate-in text-text">
+                2025<br><span class="text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-gray-600 dark:from-gray-100 dark:to-gray-600">REVIEW</span>
+            </h1>
+            <h2 class="text-2xl md:text-3xl font-light text-muted mb-12 opacity-0 animate-in">GIFT AHMED</h2>
+            
+            <div class="glass-card p-8 rounded-2xl max-w-3xl w-full mx-auto transform translate-y-10 opacity-0 animate-in">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-left">
+                    <div>
+                        <p class="text-xs text-muted uppercase font-mono mb-1">Theme</p>
+                        <p class="text-lg font-bold text-text">Consistency</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-muted uppercase font-mono mb-1">Impact</p>
+                        <p class="text-lg font-bold text-brand">1,000+ Students</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-muted uppercase font-mono mb-1">Role</p>
+                        <p class="text-lg font-bold text-text">Data Tutor</p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-muted uppercase font-mono mb-1">Volume</p>
+                        <p class="text-lg font-bold text-brand">706+ Hours</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: THE NUMBERS (DASHBOARD) -->
+        <section class="min-h-screen flex items-center justify-center px-4 section-padding">
+            <div class="max-w-7xl w-full">
+                <h2 class="text-4xl md:text-6xl font-bold mb-10 text-center text-text">THE <span class="text-brand">DATA</span></h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- KPI 1 -->
+                    <div class="glass-card p-6 rounded-xl flex flex-col justify-between h-full">
+                        <div>
+                            <p class="text-muted text-sm uppercase font-mono">Total Training Time</p>
+                            <h3 class="text-5xl font-bold text-brand mt-2 counter" data-target="706">0</h3>
+                            <p class="text-text mt-1 text-sm">Hours Delivered</p>
+                        </div>
+                        <div class="mt-6 chart-container h-32">
+                            <canvas id="miniBarChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- KPI 2 -->
+                    <div class="glass-card p-6 rounded-xl">
+                         <p class="text-muted text-sm uppercase font-mono mb-4">Session Distribution</p>
+                         <div class="chart-container" style="height: 250px;">
+                             <canvas id="sessionDoughnut"></canvas>
+                         </div>
+                         <div class="text-center mt-4">
+                             <p class="text-2xl font-bold text-text">1000+</p>
+                             <p class="text-xs text-muted">Learners Impacted</p>
+                         </div>
+                    </div>
+
+                    <!-- KPI 3 -->
+                    <div class="glass-card p-6 rounded-xl flex flex-col justify-center">
+                        <div class="space-y-6">
+                            <div>
+                                <p class="text-muted text-sm uppercase">Full Days</p>
+                                <div class="flex items-end gap-2">
+                                    <span class="text-4xl font-bold text-text">29</span>
+                                    <span class="text-brand mb-1">+ 10hrs</span>
+                                </div>
+                                <div class="w-full bg-gray-700 h-1 mt-2 rounded-full overflow-hidden">
+                                    <div class="bg-brand h-full w-[80%]"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-muted text-sm uppercase">Questions Solved</p>
+                                <span class="text-4xl font-bold text-text">Thousands</span>
+                                <div class="w-full bg-gray-700 h-1 mt-2 rounded-full overflow-hidden">
+                                    <div class="bg-brand h-full w-[95%]"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: WORKLOAD DISTRIBUTION (AREA CHART) -->
+        <section class="min-h-screen flex items-center justify-center px-4 section-padding">
+            <div class="max-w-5xl w-full glass-card p-8 rounded-2xl">
+                <div class="flex justify-between items-end mb-8">
+                    <h2 class="text-3xl font-bold text-text">WORKLOAD <span class="text-brand">INTENSITY</span></h2>
+                    <p class="text-muted font-mono text-sm hidden md:block">Unit: Hours / Month</p>
+                </div>
+                
+                <div class="chart-container" style="height: 400px;">
+                    <canvas id="timelineChart"></canvas>
+                </div>
+                
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 text-center">
+                    <div class="p-4 rounded-lg bg-gray-500/10">
+                        <p class="text-xs text-muted">Jan-Feb</p>
+                        <p class="font-bold text-brand">Foundations</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-brand/10 border border-brand/20">
+                        <p class="text-xs text-muted">Mar-Sep</p>
+                        <p class="font-bold text-brand">Peak Delivery</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-gray-500/10">
+                        <p class="text-xs text-muted">Sep-Nov</p>
+                        <p class="font-bold text-brand">Mentoring</p>
+                    </div>
+                    <div class="p-4 rounded-lg bg-gray-500/10">
+                        <p class="text-xs text-muted">December</p>
+                        <p class="font-bold text-brand">Wrap-up</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: SKILL GROWTH (RADAR CHART) -->
+        <section class="min-h-screen flex flex-col justify-center items-center px-4 section-padding">
+            <h2 class="text-4xl font-bold mb-12 text-text">SKILL <span class="text-brand">EVOLUTION</span></h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-6xl w-full items-center">
+                
+                <!-- The Radar Chart -->
+                <div class="glass-card p-4 rounded-2xl flex justify-center items-center">
+                    <div class="chart-container" style="height: 400px; width: 100%;">
+                        <canvas id="skillRadar"></canvas>
+                    </div>
+                </div>
+
+                <!-- Text Context -->
+                <div class="space-y-8">
+                    <div class="border-l-4 border-brand pl-6">
+                        <h3 class="text-2xl font-bold text-text">From "Explaining" to "Training"</h3>
+                        <p class="text-muted mt-2">The shift wasn't just technical. It was pedagogical. You learned to read the room, not just the data.</p>
+                    </div>
+                    <ul class="space-y-4">
+                        <li class="glass-card p-4 rounded-lg flex items-center gap-4">
+                            <span class="text-brand font-mono font-bold">01</span>
+                            <span class="text-text">Better pacing for mixed-level learners</span>
+                        </li>
+                        <li class="glass-card p-4 rounded-lg flex items-center gap-4">
+                            <span class="text-brand font-mono font-bold">02</span>
+                            <span class="text-text">Ability to simplify complex algorithms</span>
+                        </li>
+                        <li class="glass-card p-4 rounded-lg flex items-center gap-4">
+                            <span class="text-brand font-mono font-bold">03</span>
+                            <span class="text-text">Instructional authority over raw knowledge</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SLIDE 5: COST & LESSONS -->
+        <section class="min-h-screen flex items-center justify-center px-4 section-padding relative overflow-hidden">
+            <div class="max-w-5xl w-full z-10">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl md:text-6xl font-black mb-4 text-text">THE <span class="text-accent">COST</span> & <span class="text-brand">FUTURE</span></h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- The Cost -->
+                    <div class="glass-card p-8 rounded-2xl border-t-4 border-accent bg-gradient-to-b from-transparent to-red-900/10">
+                        <h3 class="text-accent font-mono uppercase mb-6">What Didn't Work</h3>
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-text">Energy Management</span>
+                                <div class="w-24 h-2 bg-gray-700 rounded"><div class="bg-accent h-full w-[20%]"></div></div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text">Rest & Recovery</span>
+                                <div class="w-24 h-2 bg-gray-700 rounded"><div class="bg-accent h-full w-[10%]"></div></div>
+                            </div>
+                            <p class="text-sm text-muted mt-4 italic">"Fatigue was real. Illness slowed you quietly."</p>
+                        </div>
+                    </div>
+
+                    <!-- The Future -->
+                    <div class="glass-card p-8 rounded-2xl border-t-4 border-brand">
+                        <h3 class="text-brand font-mono uppercase mb-6">2026 Strategy</h3>
+                        <ul class="space-y-3">
+                            <li class="flex items-center gap-2 text-text"><span class="text-brand">✓</span> Build Systems, reduce manual delivery</li>
+                            <li class="flex items-center gap-2 text-text"><span class="text-brand">✓</span> Price for Impact</li>
+                            <li class="flex items-center gap-2 text-text"><span class="text-brand">✓</span> Health is Strategy</li>
+                        </ul>
+                        <div class="mt-6 pt-6 border-t border-gray-700">
+                             <p class="text-xl font-bold text-text">"Proof beats potential."</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-20 text-center">
+                    <p class="text-3xl font-serif italic text-muted mb-4">"2025 proved you can carry weight."</p>
+                    <p class="text-lg font-mono text-brand">END OF REPORT</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- 1. THEME TOGGLE LOGIC ---
+        const html = document.querySelector('html');
+        const toggleBtn = document.querySelector('.theme-toggle');
+        const sunIcon = document.getElementById('sun-icon');
+        const moonIcon = document.getElementById('moon-icon');
+        let isDark = true; // Default
+
+        // Three.js variables needed for color update
+        let particlesMaterial;
+
+        function toggleTheme() {
+            isDark = !isDark;
+            html.classList.toggle('dark');
+            html.classList.toggle('light');
+
+            // Icon Toggle
+            if (isDark) {
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+            } else {
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+            }
+
+            // Update Three.js Particles Color
+            if (particlesMaterial) {
+                const newColor = isDark ? 0x00f3ff : 0x2563eb; // Cyan vs Royal Blue
+                gsap.to(particlesMaterial.color, {
+                    r: new THREE.Color(newColor).r,
+                    g: new THREE.Color(newColor).g,
+                    b: new THREE.Color(newColor).b,
+                    duration: 0.5
+                });
+            }
+
+            // Update Charts
+            updateChartsTheme();
+        }
+
+        // --- 2. THREE.JS BACKGROUND ---
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1800;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 15;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+        particlesMaterial = new THREE.PointsMaterial({
+            size: 0.025,
+            color: 0x00f3ff, // Initial Dark Mode Color
+            transparent: true,
+            opacity: 0.8,
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+        camera.position.z = 3;
+
+        let mouseX = 0;
+        let mouseY = 0;
+        document.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX / window.innerWidth - 0.5;
+            mouseY = event.clientY / window.innerHeight - 0.5;
+        });
+
+        const clock = new THREE.Clock();
+        const animate = () => {
+            const elapsedTime = clock.getElapsedTime();
+            particlesMesh.rotation.y = elapsedTime * 0.05;
+            particlesMesh.rotation.x = mouseY * 0.2;
+            particlesMesh.rotation.y += mouseX * 0.2;
+            renderer.render(scene, camera);
+            window.requestAnimationFrame(animate);
+        };
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- 3. CHART.JS CONFIGURATION ---
+        Chart.defaults.font.family = "'Inter', sans-serif";
+        Chart.defaults.color = '#9ca3af';
+        Chart.defaults.scale.grid.display = false;
+        
+        // Helper to get colors based on theme
+        const getBrandColor = () => isDark ? '#00f3ff' : '#2563eb';
+        const getTextColor = () => isDark ? '#ffffff' : '#111827';
+        const getGridColor = () => isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+
+        let charts = {}; // Store chart instances
+
+        function initCharts() {
+            // 1. Mini Bar Chart (Hours Snapshot)
+            const ctx1 = document.getElementById('miniBarChart').getContext('2d');
+            charts.miniBar = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Jan', 'Mar', 'Sep', 'Dec'],
+                    datasets: [{
+                        label: 'Hours',
+                        data: [112, 400, 162, 32],
+                        backgroundColor: getBrandColor(),
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { grid: { display: false } },
+                        y: { display: false }
+                    }
+                }
+            });
+
+            // 2. Doughnut Chart (Sessions)
+            const ctx2 = document.getElementById('sessionDoughnut').getContext('2d');
+            charts.doughnut = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Live Training', 'Mentoring', 'Tech Support', 'Q&A'],
+                    datasets: [{
+                        data: [60, 20, 15, 5],
+                        backgroundColor: [
+                            getBrandColor(),
+                            isDark ? '#00c2cc' : '#1d4ed8', 
+                            isDark ? '#009199' : '#1e40af', 
+                            isDark ? '#006166' : '#1e3a8a'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '70%',
+                    plugins: { 
+                        legend: { position: 'bottom', labels: { usePointStyle: true, color: getTextColor() } } 
+                    }
+                }
+            });
+
+            // 3. Timeline Area Chart (Big Impact)
+            const ctx3 = document.getElementById('timelineChart').getContext('2d');
+            const gradient = ctx3.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, isDark ? 'rgba(0, 243, 255, 0.5)' : 'rgba(37, 99, 235, 0.5)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+            charts.timeline = new Chart(ctx3, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [{
+                        label: 'Training Hours',
+                        data: [50, 62, 50, 60, 55, 65, 70, 50, 60, 80, 82, 32], // Distributed roughly based on prompt totals
+                        borderColor: getBrandColor(),
+                        backgroundColor: gradient,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: getBrandColor(),
+                        pointRadius: 4,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            grid: { color: getGridColor() },
+                            ticks: { color: Chart.defaults.color } 
+                        },
+                        x: { 
+                            grid: { display: false },
+                            ticks: { color: Chart.defaults.color } 
+                        }
+                    }
+                }
+            });
+
+            // 4. Radar Chart (Skills)
+            const ctx4 = document.getElementById('skillRadar').getContext('2d');
+            charts.radar = new Chart(ctx4, {
+                type: 'radar',
+                data: {
+                    labels: ['Teaching Clarity', 'Patience', 'Tech Knowledge', 'Simplification', 'Energy Mgmt', 'Consistency'],
+                    datasets: [{
+                        label: 'Start of 2025',
+                        data: [60, 70, 85, 50, 60, 80],
+                        borderColor: '#6b7280',
+                        backgroundColor: 'rgba(107, 114, 128, 0.2)',
+                        borderDash: [5, 5],
+                    }, {
+                        label: 'End of 2025',
+                        data: [95, 90, 95, 98, 50, 100], // Energy mgmt stayed low per prompt
+                        borderColor: getBrandColor(),
+                        backgroundColor: isDark ? 'rgba(0, 243, 255, 0.2)' : 'rgba(37, 99, 235, 0.2)',
+                        pointBackgroundColor: getBrandColor()
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: getGridColor() },
+                            grid: { color: getGridColor() },
+                            pointLabels: {
+                                color: getTextColor(),
+                                font: { size: 12, weight: 'bold' }
+                            },
+                            ticks: { display: false, backdropColor: 'transparent' }
+                        }
+                    },
+                    plugins: {
+                        legend: { labels: { color: getTextColor() } }
+                    }
+                }
+            });
+        }
+
+        function updateChartsTheme() {
+            const brand = getBrandColor();
+            const text = getTextColor();
+            const grid = getGridColor();
+
+            // Mini Bar
+            charts.miniBar.data.datasets[0].backgroundColor = brand;
+            charts.miniBar.update();
+
+            // Doughnut
+            charts.doughnut.data.datasets[0].backgroundColor[0] = brand;
+            charts.doughnut.data.datasets[0].backgroundColor[1] = isDark ? '#00c2cc' : '#1d4ed8';
+            charts.doughnut.data.datasets[0].backgroundColor[2] = isDark ? '#009199' : '#1e40af';
+            charts.doughnut.options.plugins.legend.labels.color = text;
+            charts.doughnut.update();
+
+            // Timeline
+            charts.timeline.data.datasets[0].borderColor = brand;
+            charts.timeline.data.datasets[0].pointBackgroundColor = brand;
+            const ctxTimeline = document.getElementById('timelineChart').getContext('2d');
+            const gradient = ctxTimeline.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, isDark ? 'rgba(0, 243, 255, 0.5)' : 'rgba(37, 99, 235, 0.5)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            charts.timeline.data.datasets[0].backgroundColor = gradient;
+            charts.timeline.options.scales.y.grid.color = grid;
+            charts.timeline.update();
+
+            // Radar
+            charts.radar.data.datasets[1].borderColor = brand;
+            charts.radar.data.datasets[1].backgroundColor = isDark ? 'rgba(0, 243, 255, 0.2)' : 'rgba(37, 99, 235, 0.2)';
+            charts.radar.data.datasets[1].pointBackgroundColor = brand;
+            charts.radar.options.scales.r.angleLines.color = grid;
+            charts.radar.options.scales.r.grid.color = grid;
+            charts.radar.options.scales.r.pointLabels.color = text;
+            charts.radar.options.plugins.legend.labels.color = text;
+            charts.radar.update();
+        }
+
+        // Initialize Charts
+        initCharts();
+
+        // --- 4. GSAP SCROLL ANIMATIONS ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.to("#progress-bar", {
+            width: "100%",
+            scrollTrigger: {
+                trigger: "body",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: true
+            }
+        });
+
+        const introElements = document.querySelectorAll('.animate-in');
+        gsap.to(introElements, {
+            y: 0,
+            opacity: 1,
+            duration: 1.5,
+            stagger: 0.2,
+            ease: "power3.out"
+        });
+
+        const counters = document.querySelectorAll('.counter');
+        counters.forEach(counter => {
+            const target = +counter.getAttribute('data-target');
+            gsap.to(counter, {
+                innerText: target,
+                duration: 2,
+                snap: { innerText: 1 },
+                scrollTrigger: {
+                    trigger: counter,
+                    start: "top 85%",
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>
